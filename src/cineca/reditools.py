@@ -846,10 +846,8 @@ def analyze(options):
     print("[SYSTEM]", "PYSAM PATH", pysam.__path__)
     
     interface = 'ib0' if 'ib0' in netifaces.interfaces() else netifaces.interfaces()[0]
-    hostname = socket.gethostbyaddr(netifaces.ifaddresses(interface)[netifaces.AF_INET][0]['addr'])
     pid = os.getpid()
-    hostname_string = hostname[0] + "|" + hostname[2][0] + "|" + str(pid)
-    
+
     bamfile = options["bamfile"]
     region = options["region"]
     reference_file = options["reference"]
@@ -998,7 +996,7 @@ def analyze(options):
 #                     next_pos = next_read.get_reference_positions()
                     
                     if total % LOG_INTERVAL == 0:
-                        print("[{}] [{}] [{}] Total reads loaded: {} [{}] [RAM:{}MB]".format(hostname_string, last_chr, region, total, datetime.datetime.now(), psutil.Process(os.getpid()).memory_info().rss / (1024 * 1024)))
+                        print("[{}] [{}] Total reads loaded: {} [{}] [RAM:{}MB]".format(last_chr, region, total, datetime.datetime.now(), psutil.Process(os.getpid()).memory_info().rss / (1024 * 1024)))
                         sys.stdout.flush()
                 
 #                 print("P2", next_read.query_name, next_read.get_reference_positions())
@@ -1181,9 +1179,9 @@ def analyze(options):
     writer.close()
     
     tac = datetime.datetime.now()
-    print("[INFO] ["+hostname_string+"] ["+str(region)+"] " + str(total) + " total reads read")
-    print("[INFO] ["+hostname_string+"] ["+str(region)+"] END=" + str(tac) + "\t["+delta(tac, tic)+"]")
-    print("[INFO] ["+hostname_string+"] ["+str(region).ljust(50)+"] FINAL END=" + str(tac) + " START="+ str(first_tic) + "\t"+ str(region) +"\t[TOTAL COMPUTATION="+delta(tac, first_tic)+"] [LAUNCH TIME:"+str(LAUNCH_TIME)+"] [TOTAL RUN="+delta(tac, LAUNCH_TIME)+"] [READS="+str(total)+"]")
+    print("[INFO] ["+str(region)+"] " + str(total) + " total reads read")
+    print("[INFO] ["+str(region)+"] END=" + str(tac) + "\t["+delta(tac, tic)+"]")
+    print("[INFO] ["+str(region).ljust(50)+"] FINAL END=" + str(tac) + " START="+ str(first_tic) + "\t"+ str(region) +"\t[TOTAL COMPUTATION="+delta(tac, first_tic)+"] [LAUNCH TIME:"+str(LAUNCH_TIME)+"] [TOTAL RUN="+delta(tac, LAUNCH_TIME)+"] [READS="+str(total)+"]")
 
 complement_map = {"A":"T", "T":"A", "C":"G", "G":"C"}
 def complement(b):
